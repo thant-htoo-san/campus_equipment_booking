@@ -2,6 +2,10 @@
 
 A TypeScript/Hono REST API for Cloudflare Workers backed by D1. It prevents overlapping reservations for the same equipment and implements the contract in `exam_brief_en.md`.
 
+## About the project
+
+This backend API helps a faculty manage reservations for shared campus equipment such as projectors, cameras, and meeting-room resources. Users can view available equipment and create, read, update, or delete bookings. The system validates booking details, confirms that the selected equipment exists, and prevents the same equipment from being reserved for overlapping time periods. It is built with TypeScript and Hono, runs as a Cloudflare Worker, and stores data in Cloudflare D1.
+
 ## Requirements and setup
 
 - Node.js 20 or newer
