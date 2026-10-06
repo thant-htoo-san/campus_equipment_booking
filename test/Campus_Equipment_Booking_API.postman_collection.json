@@ -1,0 +1,262 @@
+{
+  "info": {
+    "_postman_id": "a63ef120-8db7-4aa5-a933-campus-booking-api",
+    "name": "Campus Equipment Booking API",
+    "description": "CRUD and error tests for the Hono/Cloudflare D1 Campus Equipment Booking API. Run the collection in order; the create request stores bookingId automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8787/api",
+      "type": "string"
+    },
+    {
+      "key": "bookingId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. List equipment — 200",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/equipment"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Two or more equipment records exist', () => {",
+              "  const data = pm.response.json();",
+              "  pm.expect(data).to.be.an('array').with.length.of.at.least(2);",
+              "  pm.expect(data.some(item => item.id === 'eq-1')).to.be.true;",
+              "  pm.expect(data.some(item => item.id === 'eq-2')).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. List bookings — 200",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/bookings"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Response is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Create booking — 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"equipmentId\": \"eq-1\",\n  \"borrowerName\": \"Somchai Jaidee\",\n  \"startAt\": \"2026-10-20T09:00:00.000Z\",\n  \"endAt\": \"2026-10-20T11:00:00.000Z\",\n  \"purpose\": \"Class presentation\"\n}"
+        },
+        "url": "{{baseUrl}}/bookings"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+              "const data = pm.response.json();",
+              "pm.test('Created booking has required fields', () => {",
+              "  pm.expect(data).to.include.all.keys('id', 'equipmentId', 'borrowerName', 'startAt', 'endAt', 'purpose');",
+              "  pm.expect(data.equipmentId).to.eql('eq-1');",
+              "});",
+              "pm.collectionVariables.set('bookingId', data.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Get one booking — 200",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/bookings/{{bookingId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Correct booking is returned', () => pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get('bookingId')));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Update booking — 200",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"equipmentId\": \"eq-1\",\n  \"borrowerName\": \"Somchai Jaidee\",\n  \"startAt\": \"2026-10-20T12:00:00.000Z\",\n  \"endAt\": \"2026-10-20T14:00:00.000Z\",\n  \"purpose\": \"Updated class presentation\"\n}"
+        },
+        "url": "{{baseUrl}}/bookings/{{bookingId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Fields were updated', () => {",
+              "  const data = pm.response.json();",
+              "  pm.expect(data.startAt).to.eql('2026-10-20T12:00:00.000Z');",
+              "  pm.expect(data.purpose).to.eql('Updated class presentation');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Invalid time range — 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"equipmentId\": \"eq-1\",\n  \"borrowerName\": \"Somchai Jaidee\",\n  \"startAt\": \"2026-10-21T11:00:00.000Z\",\n  \"endAt\": \"2026-10-21T09:00:00.000Z\",\n  \"purpose\": \"Invalid time range test\"\n}"
+        },
+        "url": "{{baseUrl}}/bookings"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 400', () => pm.response.to.have.status(400));",
+              "pm.test('JSON error is returned', () => pm.expect(pm.response.json()).to.have.property('error'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Overlapping booking — 409",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"equipmentId\": \"eq-1\",\n  \"borrowerName\": \"Suda Dee\",\n  \"startAt\": \"2026-10-20T12:30:00.000Z\",\n  \"endAt\": \"2026-10-20T13:30:00.000Z\",\n  \"purpose\": \"Conflict test\"\n}"
+        },
+        "url": "{{baseUrl}}/bookings"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 409', () => pm.response.to.have.status(409));",
+              "pm.test('Conflict JSON error is returned', () => pm.expect(pm.response.json().error).to.include('conflict'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Unknown equipment — 404",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"equipmentId\": \"eq-missing\",\n  \"borrowerName\": \"Suda Dee\",\n  \"startAt\": \"2026-10-22T09:00:00.000Z\",\n  \"endAt\": \"2026-10-22T10:00:00.000Z\",\n  \"purpose\": \"Equipment validation test\"\n}"
+        },
+        "url": "{{baseUrl}}/bookings"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404', () => pm.response.to.have.status(404));",
+              "pm.test('Equipment error is returned', () => pm.expect(pm.response.json().error).to.eql('Equipment not found'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Missing booking — 404",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/bookings/not-found"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404', () => pm.response.to.have.status(404));",
+              "pm.test('Booking error is returned', () => pm.expect(pm.response.json().error).to.eql('Booking not found'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Delete booking — 204",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/bookings/{{bookingId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 204', () => pm.response.to.have.status(204));",
+              "pm.test('Response body is empty', () => pm.expect(pm.response.text()).to.eql(''));",
+              "pm.collectionVariables.unset('bookingId');"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
