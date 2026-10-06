@@ -60,6 +60,7 @@ This file records the significant AI assistance used for the Campus Equipment Bo
 - Recorded successful and error results in `TEST_EVIDENCE.md`.
 - Created `test/Campus_Equipment_Booking_API.postman_collection.json` with ten ordered requests, assertions, automatic booking-ID storage, and cleanup.
 - Updated `README.md` with cURL, Postman, D1, endpoint, and project-structure instructions.
+- Deployed the Worker and changed the test documentation and Postman collection to use the public Cloudflare URL after the instructor requested non-local testing.
 
 ## Important technical decisions accepted
 
@@ -80,6 +81,7 @@ On 2026-10-06, the AI-assisted session performed these checks:
 - The remote D1 migration completed successfully.
 - All nine cURL guide cases returned their expected statuses: `200`, `200`, `201`, `200`, `200`, `400`, `409`, `404`, and `204`.
 - The Postman collection was parsed as valid JSON and contains ten requests.
+- The deployed Cloudflare API passed all nine cURL guide cases using remote D1.
 
 ## Student verification and ownership
 

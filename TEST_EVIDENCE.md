@@ -1,10 +1,10 @@
 # Test Evidence
 
 **Date:** 2026-10-06  
-**Base API URL:** `http://localhost:8787/api`  
-**Runtime:** Cloudflare Wrangler local Worker with local D1
+**Base API URL:** `https://campus-equipment-booking-api.campus-event-manager.workers.dev/api`  
+**Runtime:** Deployed Cloudflare Worker with remote D1
 
-The commands from `curl_test_guide.md` were executed after applying `migrations/0001_initial.sql`.
+The commands from `curl_test_guide.md` were executed against the public Cloudflare deployment after applying `migrations/0001_initial.sql` to remote D1.
 
 | # | Case | Expected | Actual | Result |
 |---:|---|---:|---:|---|
@@ -32,4 +32,4 @@ The commands from `curl_test_guide.md` were executed after applying `migrations/
 { "error": "Booking not found" }
 ```
 
-The Wrangler request log independently recorded all nine requests and matching statuses. The created booking was deleted at the end, leaving the local test database clean.
+All nine requests returned the expected statuses from the public HTTPS endpoint. The created booking was deleted at the end, leaving the remote test database clean.

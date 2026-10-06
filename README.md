@@ -18,7 +18,13 @@ npm run typecheck
 npm run dev
 ```
 
-The Base API URL is `http://localhost:8787/api`. Wrangler runs the Worker with a local D1 database. The migration in `migrations/0001_initial.sql` creates the tables and seeds:
+The deployed Base API URL is:
+
+```text
+https://campus-equipment-booking-api.campus-event-manager.workers.dev/api
+```
+
+Wrangler can also run the Worker locally for development. The migration in `migrations/0001_initial.sql` creates the tables and seeds:
 
 - `eq-1` — Projector A, Building 1
 - `eq-2` — Camera Kit A, Media Lab
@@ -49,9 +55,11 @@ See [API_CONTRACT.md](API_CONTRACT.md) for the full contract and [SCHEMA.md](SCH
 ## Testing with cURL
 
 ```bash
-curl -i http://localhost:8787/api/equipment
+BASE_URL="https://campus-equipment-booking-api.campus-event-manager.workers.dev/api"
 
-curl -i -X POST http://localhost:8787/api/bookings \
+curl -i "$BASE_URL/equipment"
+
+curl -i -X POST "$BASE_URL/bookings" \
   -H 'Content-Type: application/json' \
   -d '{"equipmentId":"eq-1","borrowerName":"Somchai Jaidee","startAt":"2026-10-20T09:00:00.000Z","endAt":"2026-10-20T11:00:00.000Z","purpose":"Class presentation"}'
 ```
@@ -62,11 +70,10 @@ The complete command sequence is in [curl_test_guide.md](curl_test_guide.md). Re
 
 ## Testing with Postman
 
-1. Start the local API with `npm run dev`.
-2. Import [test/Campus_Equipment_Booking_API.postman_collection.json](test/Campus_Equipment_Booking_API.postman_collection.json) into Postman.
-3. Run the collection in its existing order.
+1. Import [test/Campus_Equipment_Booking_API.postman_collection.json](test/Campus_Equipment_Booking_API.postman_collection.json) into Postman.
+2. Run the collection in its existing order.
 
-The collection uses `http://localhost:8787/api` by default. It creates a booking, stores its ID in the collection variable `bookingId`, exercises read/update/error cases, and deletes the booking at the end. It contains ten requests with automatic status-code and response assertions.
+The collection uses the deployed Cloudflare URL by default. It creates a booking, stores its ID in the collection variable `bookingId`, exercises read/update/error cases, and deletes the booking at the end. It contains ten requests with automatic status-code and response assertions.
 
 ## Verification commands
 
@@ -79,7 +86,7 @@ At present, `npm test` runs the TypeScript check. Runtime API verification is su
 
 ## Remote D1 deployment
 
-The remote `campus-equipment-booking` D1 database is configured in `wrangler.jsonc`, and its initial migration has been applied. To deploy the Worker from an authenticated machine:
+The remote `campus-equipment-booking` D1 database is configured in `wrangler.jsonc`, its initial migration has been applied, and the Worker is deployed. To publish later changes:
 
 ```bash
 npx wrangler login

@@ -1,6 +1,6 @@
 # API Contract
 
-Base URL: `http://localhost:8787/api`
+Base URL: `https://campus-equipment-booking-api.campus-event-manager.workers.dev/api`
 
 All request and response bodies are JSON except a successful delete, which has no body. Every error has the form `{ "error": "message" }`.
 

@@ -3,7 +3,7 @@
 Use these commands as a starting point to test your API. Replace the Base URL if your server uses a different address, then copy and run the commands in a terminal.
 
 ```bash
-BASE_URL="http://localhost:8787/api"
+BASE_URL="https://campus-equipment-booking-api.campus-event-manager.workers.dev/api"
 ```
 
 The expected status code is shown above each command. Save terminal output or screenshots as part of your test evidence. You may create your own browser client or other testing tool, but it is optional and is not assessed as frontend work.

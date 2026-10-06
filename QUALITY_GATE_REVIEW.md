@@ -12,4 +12,4 @@ The first implementation was reviewed against `quality_gate.md` after the initia
 
 ## Final Quality Gate result
 
-**READY for local assessment.** The contract, schema/ERD, D1 migration, CRUD API, validation, parameter binding, AI log, run instructions, and more than five cURL cases are present. The student should still read the source and be prepared to explain each decision under the You Own It criterion.
+**READY for assessment.** The contract, schema/ERD, D1 migration, deployed CRUD API, validation, parameter binding, AI log, run instructions, and nine public-endpoint cURL cases are present. The student should still read the source and be prepared to explain each decision under the You Own It criterion.

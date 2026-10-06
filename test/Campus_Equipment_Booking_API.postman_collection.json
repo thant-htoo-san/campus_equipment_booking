@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8787/api",
+      "value": "https://campus-equipment-booking-api.campus-event-manager.workers.dev/api",
       "type": "string"
     },
     {
